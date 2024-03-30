@@ -4,6 +4,8 @@ import Cards from "./cards";
 
 export default function Homepage() {
     const [data, setData] = useState([]);
+    const [searchResult, setSearchResult] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
         fetch('https://rickandmortyapi.com/graphql', {
@@ -30,19 +32,34 @@ export default function Homepage() {
         .then(data => setData(data.data.characters.results))
         .catch(error => console.error('Error fetching data:', error));
     }, []);
-    console.log(data)
+
+    const handleSearchResult = (result) => {
+        setSearchResult(result);
+        setSearchValue(result.length > 0 ? '' : searchValue); 
+    };
+
     return (
         <div>
-            <Searchbar />
-            {data.map(character => (
-                <Cards
-                    key={character.id} 
-                    id={character.id}
-                    name={character.name}
-                    image={character.image}
-                />
-            ))}
+            <Searchbar setSearchResult={handleSearchResult} />
+            {(searchResult.length > 0 || searchValue) ? (
+                searchResult.map(character => (
+                    <Cards
+                        key={character.id} 
+                        id={character.id}
+                        name={character.name}
+                        image={character.image}
+                    />
+                ))
+            ) : (
+                data.map(character => (
+                    <Cards
+                        key={character.id} 
+                        id={character.id}
+                        name={character.name}
+                        image={character.image}
+                    />
+                ))
+            )}
         </div>
     );
-    
 }

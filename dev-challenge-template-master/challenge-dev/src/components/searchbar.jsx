@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function Searchbar() {
+export default function Searchbar({ setSearchResult }) {
     const [dataCharacter, setDataCharacter] = useState(null);
     const [input, setInput] = useState('');
 
@@ -27,9 +27,9 @@ export default function Searchbar() {
             })
         })
         .then(response => response.json())
-        .then(data => setDataCharacter(data.data.characters.results[0])) 
+        .then(data => setSearchResult(data.data.characters.results))
         .catch(error => console.error('Error fetching data:', error));
-    }, [input]); 
+    }, [input, setSearchResult]); 
 
     const handleInputChange = (event) => {
         setInput(event.target.value);
