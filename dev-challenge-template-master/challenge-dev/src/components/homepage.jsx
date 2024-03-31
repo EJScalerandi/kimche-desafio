@@ -6,6 +6,7 @@ export default function Homepage() {
     const [data, setData] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState('');
+    const [selectedGender, setSelectedGender] = useState('');
 
     useEffect(() => {
         fetch('https://rickandmortyapi.com/graphql', {
@@ -22,6 +23,9 @@ export default function Homepage() {
                                 id
                                 name
                                 image
+                                status
+                                gender
+                                species
                             }
                         }
                     }
@@ -40,7 +44,7 @@ export default function Homepage() {
 
     return (
         <div>
-            <Searchbar setSearchResult={handleSearchResult} />
+            <Searchbar setSearchResult={handleSearchResult} setData={setData} data={data} />
             {(searchResult.length > 0 || searchValue) ? (
                 searchResult.map(character => (
                     <Cards
@@ -51,7 +55,9 @@ export default function Homepage() {
                     />
                 ))
             ) : (
-                data.map(character => (
+                data
+                .filter(character => !selectedGender || character.gender === selectedGender)
+                .map(character => (
                     <Cards
                         key={character.id} 
                         id={character.id}
