@@ -1,10 +1,11 @@
 import React from "react";
 
-export default function Cards({ id, name, image }) {
+export default function Cards({ id, name, image,status }) {
     return (
         <div>
             <p>name: {name}</p>
             <img src={image} alt={name} />
+            <p>status: {status}</p>
         </div>
     );
 }

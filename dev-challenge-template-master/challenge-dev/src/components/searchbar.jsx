@@ -2,18 +2,14 @@ import React, { useState, useEffect } from "react";
 
 export default function Searchbar({ setSearchResult }) {
     const [input, setInput] = useState('');
-    const [selectedGender, setSelectedGender] = useState('');
-    const [dataCharacter, setDataCharacter] = useState(null);
 
     useEffect(() => {
-        if (!input && !selectedGender) return; // Si no hay entrada ni género seleccionado, no hagas nada
-
-        // Construir la query de GraphQL basada en los filtros
+        if (!input) return; 
+    
         const query = `
             query {
                 characters(filter: {
-                    name: "${input}",
-                    gender: "${selectedGender}"
+                    name: "${input}"
                 }) {
                     results {
                         id
@@ -25,7 +21,7 @@ export default function Searchbar({ setSearchResult }) {
                 }
             }
         `;
-
+    
         fetch('https://rickandmortyapi.com/graphql', {
             method: 'POST',
             headers: {
@@ -35,16 +31,19 @@ export default function Searchbar({ setSearchResult }) {
             body: JSON.stringify({ query })
         })
         .then(response => response.json())
-        .then(data => setSearchResult(data.data.characters.results))
+        .then(data => {
+            if (Array.isArray(data.data.characters.results) && data.data.characters.results.length === 0) {
+                setSearchResult(1); 
+            } else {
+                setSearchResult(data.data.characters.results);
+            }
+        })
         .catch(error => console.error('Error fetching data:', error));
-    }, [input, selectedGender, setSearchResult]); 
-
+    }, [input]);
+    
+  
     const handleInputChange = (event) => {
         setInput(event.target.value);
-    };
-
-    const handleGenderChange = (event) => {
-        setSelectedGender(event.target.value);
     };
 
     return (
@@ -55,19 +54,6 @@ export default function Searchbar({ setSearchResult }) {
                 value={input} 
                 onChange={handleInputChange} 
             />
-            <select value={selectedGender} onChange={handleGenderChange}>
-                <option value="">All Genders</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Genderless">Genderless</option>
-                <option value="unknown">Unknown</option>
-            </select>
-            {dataCharacter && (
-                <div>
-                    <p>name: {dataCharacter.name}</p>
-                    <img src={dataCharacter.image} alt={dataCharacter.name} />
-                </div>
-            )}
         </div>
     );
 }
