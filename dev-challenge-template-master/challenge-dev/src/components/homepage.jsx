@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 
 export default function Homepage() {
     const [data, setData] = useState([]);
-    const [backUp, setBackUp] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [input, setInput] = useState('');
     const [selectedGender, setSelectedGender] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
@@ -13,6 +14,10 @@ export default function Homepage() {
     const [searchResult, setSearchResult] = useState([]);
 
     useEffect(() => {
+        fetchData(currentPage);
+    }, [currentPage]);
+
+    const fetchData = (page) => {
         fetch('https://rickandmortyapi.com/graphql', {
             method: 'POST',
             headers: {
@@ -22,7 +27,10 @@ export default function Homepage() {
             body: JSON.stringify({
                 query: `
                     query {
-                        characters {
+                        characters(page: ${page}) {
+                            info {
+                                pages
+                            }
                             results {
                                 id
                                 name
@@ -37,17 +45,18 @@ export default function Homepage() {
             })
         })
         .then(response => response.json())
-        .then(data => {
-            setData(data.data.characters.results);
-            setBackUp(data.data.characters.results);
+        .then(result => {
+            setData(result.data.characters.results);
+            setTotalPages(result.data.characters.info.pages);
         })
         .catch(error => console.error('Error fetching data:', error));
-    }, []);
+    };
 
     useEffect(() => {
-        if(searchResult === 1){
-            return};
-        if(searchResult.length > 0){
+        if(searchResult === 1) {
+            return;
+        }
+        if(searchResult.length > 0) {
             setData(searchResult);
         }
     }, [searchResult]);
@@ -76,15 +85,25 @@ export default function Homepage() {
         setSelectedSpecies(event.target.value);
     };
 
-const handleResetFilters = () => {
-    setSelectedGender('');
-    setSelectedStatus('');
-    setSelectedSpecies('');
-    setSearchResult([]);
-    setData(backUp);
-};
+    const handleResetFilters = () => {
+        setSelectedGender('');
+        setSelectedStatus('');
+        setSelectedSpecies('');
+        setSearchResult([]);
+        fetchData(1);
+    };
 
+    const handleNextPage = () => {
+        if(currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
+    const handlePreviousPage = () => {
+        if(currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
     return (
         <div>
@@ -113,22 +132,23 @@ const handleResetFilters = () => {
                 <option value="unknown">Unknown</option>
             </select>
             <button onClick={handleResetFilters}>Reset Filters</button>
+            <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous Page</button>
+            <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
             <div>
-    {data.length > 0 ? (
-        data.map(character => (
-            <Link key={character.id} to={`/detail/${character.id}`}>
-                <Cards
-                    id={character.id}
-                    name={<span>{character.name}</span>}
-                    image={character.image}
-                />
-            </Link>
-        ))
-    ) : (
-        <p>No hay datos disponibles</p>
-    )}
-</div>
-
+                {data.length > 0 ? (
+                    data.map(character => (
+                        <Link key={character.id} to={`/detail/${character.id}`}>
+                            <Cards
+                                id={character.id}
+                                name={<span>{character.name}</span>}
+                                image={character.image}
+                            />
+                        </Link>
+                    ))
+                ) : (
+                    <p>No hay datos disponibles</p>
+                )}
+            </div>
         </div>
     );
 }
