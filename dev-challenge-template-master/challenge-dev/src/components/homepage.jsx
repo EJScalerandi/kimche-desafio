@@ -12,10 +12,18 @@ export default function Homepage() {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [selectedSpecies, setSelectedSpecies] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-
+   
     useEffect(() => {
-        fetchData(currentPage);
-    }, [currentPage]);
+        if (searchResult === 1) {
+            return;
+        }
+        if (searchResult.length > 1) {
+            setData(searchResult);
+        } else {
+            fetchData(currentPage);
+        }
+    }, [searchResult, currentPage]);
+    
 
     const fetchData = (page) => {
         fetch('https://rickandmortyapi.com/graphql', {
@@ -91,6 +99,7 @@ export default function Homepage() {
         setSelectedSpecies('');
         setSearchResult([]);
         fetchData(1);
+        setCurrentPage(1);
     };
 
     const handleNextPage = () => {

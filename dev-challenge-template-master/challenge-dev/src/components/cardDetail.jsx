@@ -64,12 +64,25 @@ export default function CardDetail() {
             })
             .then(response => response.json())
             .then(data => {
-                setLocationData(data.data.location);
+                // Verifica si el id es null
+                if (!originId) {
+                    // Asigna valores predefinidos a locationData si el id es null
+                    setLocationData({
+                        id: "unknown",
+                        name: "unknown",
+                        type: "unknown",
+                        dimension: "unknown",
+                        residents: []
+                    });
+                } else {
+                    setLocationData(data.data.location);
+                }
             })
             .catch(error => console.error('Error fetching location data:', error));
         })
         .catch(error => console.error('Error fetching character data:', error));
     }, [id]);
+    
 
     return (
         <div>
@@ -84,9 +97,9 @@ export default function CardDetail() {
                     <p>Location: {locationData.name}</p>
                     <p>Location Type: {locationData.type}</p>
                     <p>Location Dimension: {locationData.dimension}</p>
-                                    </div>
+                </div>
             ) : (
-                <p>Loading...</p>
+                <p>Cargando...</p>
             )}
         </div>
     );

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 export default function Searchbar({ setSearchResult }) {
     const [input, setInput] = useState('');
 
-    useEffect(() => {
-        if (!input) return; 
+    const handleSearch = () => {
+        if (!input) return;
     
         const query = `
             query {
@@ -39,9 +39,8 @@ export default function Searchbar({ setSearchResult }) {
             }
         })
         .catch(error => console.error('Error fetching data:', error));
-    }, [input]);
-    
-  
+    };
+
     const handleInputChange = (event) => {
         setInput(event.target.value);
     };
@@ -54,6 +53,7 @@ export default function Searchbar({ setSearchResult }) {
                 value={input} 
                 onChange={handleInputChange} 
             />
+            <button onClick={handleSearch}>Buscar</button>
         </div>
     );
 }
