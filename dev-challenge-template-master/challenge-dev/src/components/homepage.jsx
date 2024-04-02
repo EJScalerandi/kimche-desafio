@@ -1,4 +1,3 @@
-// Homepage.jsx
 import React, { useState, useEffect } from "react";
 import Cards from "./Cards";
 import SearchBar from "./searchbar";
