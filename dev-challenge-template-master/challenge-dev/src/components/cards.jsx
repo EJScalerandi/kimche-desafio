@@ -5,7 +5,6 @@ export default function Cards({ id, name, image,status }) {
         <div>
             <p>name: {name}</p>
             <img src={image} alt={name} />
-            <p>status: {status}</p>
         </div>
     );
 }

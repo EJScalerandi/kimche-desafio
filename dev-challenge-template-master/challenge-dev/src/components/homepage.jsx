@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Cards from "./Cards";
 import SearchBar from "./searchbar";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
     const [data, setData] = useState([]);
@@ -114,20 +115,21 @@ const handleResetFilters = () => {
             </select>
             <button onClick={handleResetFilters}>Reset Filters</button>
             <div>
-                {data.length > 0 ? (
-                    data.map(character => (
-                        <Cards
-                            key={character.id} 
-                            id={character.id}
-                            name={character.name}
-                            image={character.image}
-                            status={character.status}
-                        />
-                    ))
-                ) : (
-                    <p>No hay datos disponibles</p>
-                )}
-            </div>
+    {data.length > 0 ? (
+        data.map(character => (
+            <Link key={character.id} to={`/detail/${character.id}`}>
+                <Cards
+                    id={character.id}
+                    name={<span>{character.name}</span>}
+                    image={character.image}
+                />
+            </Link>
+        ))
+    ) : (
+        <p>No hay datos disponibles</p>
+    )}
+</div>
+
         </div>
     );
 }
