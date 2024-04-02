@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Cards from "./Cards";
 import SearchBar from "./searchbar";
 import { Link } from "react-router-dom";
+import rickAndMortyImage from "../assets/rickandmorty.jpg";
 
 export default function Homepage() {
     const [data, setData] = useState([]);
@@ -115,7 +116,8 @@ export default function Homepage() {
     };
 
     return (
-        <div>
+        <div style={{ backgroundImage: `url(${rickAndMortyImage})`, backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', minHeight: '100vh', padding: '20px' }}>
+
             <div>
                 <SearchBar setSearchResult={setSearchResult} />
             </div>
@@ -141,8 +143,6 @@ export default function Homepage() {
                 <option value="unknown">Unknown</option>
             </select>
             <button onClick={handleResetFilters}>Reset Filters</button>
-            <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous Page</button>
-            <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
             <div>
                 {data.length > 0 ? (
                     data.map(character => (
@@ -157,6 +157,9 @@ export default function Homepage() {
                 ) : (
                     <p>No hay datos disponibles</p>
                 )}
+                <br/>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous Page</button>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
             </div>
         </div>
     );

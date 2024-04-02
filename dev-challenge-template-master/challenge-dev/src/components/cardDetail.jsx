@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 export default function CardDetail() {
     const [characterData, setCharacterData] = useState(null);
@@ -97,6 +97,9 @@ export default function CardDetail() {
                     <p>Location: {locationData.name}</p>
                     <p>Location Type: {locationData.type}</p>
                     <p>Location Dimension: {locationData.dimension}</p>
+
+                    {/* Agregar el botón para volver a la página de inicio */}
+                    <Link to="/">Volver a la página de inicio</Link>
                 </div>
             ) : (
                 <p>Cargando...</p>
