@@ -15,6 +15,7 @@ export default function Homepage() {
     const [selectedSpecies, setSelectedSpecies] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const pageSize = 24; 
+   
     useEffect(() => {
         fetchData();
     }, []);
@@ -22,7 +23,6 @@ export default function Homepage() {
     const fetchData = async () => {
         try {
             const allCharacters = [];
-
             
             for (let i = 1; i <= 5; i++) {
                 const response = await fetch('https://rickandmortyapi.com/graphql', {
@@ -62,7 +62,6 @@ export default function Homepage() {
             console.error('Error fetching data:', error);
         }
     };
-
     const applyFiltersAndPagination = (characters) => {
         let filteredData = characters.filter(character => {
             return (
@@ -123,36 +122,41 @@ export default function Homepage() {
         <div style={{
             backgroundImage: `url(${rickAndMortyImage})`,
             backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            minHeight: '100vh',
-            padding: '20px'
+            backgroundRepeat: 'repeat',
+            backgroundAttachment: 'fixed', 
+            minHeight: 'calc(100vh - 5cm)', 
+            padding: '20px',
+            paddingBottom: '5cm', 
+            boxSizing: 'border-box', 
         }}>
 
-            <div>
+            <div style={{ marginBottom: '20px' }}> 
                 <SearchBar setSearchResult={setSearchResult} setInput={setInput} />
             </div>
-            <select value={selectedGender} onChange={handleGenderChange}>
-                <option value="">All Genders</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Genderless">Genderless</option>
-                <option value="unknown">Unknown</option>
-            </select>
-            <select value={selectedStatus} onChange={handleStatusChange}>
-                <option value="">All Statuses</option>
-                <option value="Alive">Alive</option>
-                <option value="Dead">Dead</option>
-                <option value="unknown">Unknown</option>
-            </select>
-            <select value={selectedSpecies} onChange={handleSpeciesChange}>
-                <option value="">All Species</option>
-                <option value="Human">Human</option>
-                <option value="Alien">Alien</option>
-                <option value="Animal">Animal</option>
-                <option value="Robot">Robot</option>
-                <option value="unknown">Unknown</option>
-            </select>
-            <button onClick={handleResetFilters}>Reset Filters</button>
+            <div style={{ display: 'flex', marginBottom: '20px' }}> 
+                <select value={selectedGender} onChange={handleGenderChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                    <option value="">Todos los géneros</option>
+                    <option value="Male">Masculinos</option>
+                    <option value="Female">Femeninos</option>
+                    <option value="Genderless">Sin género</option>
+                    <option value="unknown">Desconocido</option>
+                </select>
+                <select value={selectedStatus} onChange={handleStatusChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em' ,textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                    <option value="">Todos los estados</option>
+                    <option value="Alive">Con vida</option>
+                    <option value="Dead">Muertos</option>
+                    <option value="unknown">Desconocido</option>
+                </select>
+                <select value={selectedSpecies} onChange={handleSpeciesChange} style={{ flex: '1', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                    <option value="">Todas las especies</option>
+                    <option value="Human">Humanos</option>
+                    <option value="Alien">Alien</option>
+                    <option value="Animal">Animales</option>
+                    <option value="Robot">Robot</option>
+                    <option value="unknown">Desconocido</option>
+                </select>
+            </div>
+            <button onClick={handleResetFilters} style={{ marginBottom: '20px', fontSize: '1.1em', border: '1px solid #ff0505', borderRadius: '5px', padding: '5px 10px' }}>Resetear filtros</button> {/* Añadir margen inferior */}
             <div>
                 {data.length > 0 ? (
                     data.map(character => (
@@ -168,8 +172,8 @@ export default function Homepage() {
                     <p>No hay datos disponibles</p>
                 )}
                 <br />
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous Page</button>
-                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1} style={{ fontSize: '1.1em' }}>Página previa</button>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages} style={{ fontSize: '1.1em' }}>Página siguiente</button>
             </div>
         </div>
     );

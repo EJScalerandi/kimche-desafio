@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export default function Searchbar({ setSearchResult }) {
     const [input, setInput] = useState('');
@@ -46,14 +46,15 @@ export default function Searchbar({ setSearchResult }) {
     };
 
     return (
-        <div>
+        <div style={{ marginBottom: '20px' }}> 
             <input 
                 type="text" 
-                placeholder="Search" 
+                placeholder="Buscar" 
                 value={input} 
                 onChange={handleInputChange} 
+                style={{ marginRight: '10px', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }} /* Aplicar estilos */
             />
-            <button onClick={handleSearch}>Buscar</button>
+            <button onClick={handleSearch} style={{ border: '1px solid #ff0505', borderRadius: '5px', padding: '5px 10px', height: '40px', fontSize: '1.1em' }}>Buscar</button> {/* Aplicar estilos */}
         </div>
     );
 }
