@@ -14,56 +14,57 @@ export default function Homepage() {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [selectedSpecies, setSelectedSpecies] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-   
+    const pageSize = 32; 
     useEffect(() => {
-        fetchData(currentPage);
-        if (searchResult === 1) {
-            return;
-        }
-        if (searchResult.length > 1) {
-            setData(searchResult);
-        } 
-    }, [searchResult, currentPage]);
-    
+        fetchData();
+    }, []);
 
-    const fetchData = (page) => {
-        fetch('https://rickandmortyapi.com/graphql', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query: `
-                    query {
-                        characters(page: ${page}) {
-                            info {
-                                pages
+    const fetchData = async () => {
+        try {
+            const allCharacters = [];
+
+            
+            for (let i = 1; i <= 5; i++) {
+                const response = await fetch('https://rickandmortyapi.com/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: `
+                            query {
+                                characters(page: ${i}) {
+                                    info {
+                                        pages
+                                    }
+                                    results {
+                                        id
+                                        name
+                                        image
+                                        status
+                                        gender
+                                        species
+                                    }
+                                }
                             }
-                            results {
-                                id
-                                name
-                                image
-                                status
-                                gender
-                                species
-                            }
-                        }
-                    }
-                `
-            })
-        })
-        .then(response => response.json())
-        .then(result => {
-            setOriginalData(result.data.characters.results); 
-            setData(result.data.characters.results);
-            setTotalPages(result.data.characters.info.pages);
-        })
-        .catch(error => console.error('Error fetching data:', error));
+                        `
+                    })
+                });
+                const result = await response.json();
+                allCharacters.push(...result.data.characters.results);
+            }
+
+            setOriginalData(allCharacters);
+            applyFiltersAndPagination(allCharacters);
+            setTotalPages(5); 
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
-    useEffect(() => {
-        const filteredData = originalData.filter(character => { 
+    const applyFiltersAndPagination = (characters) => {
+        let filteredData = characters.filter(character => {
             return (
                 character.name.toLowerCase().includes(input.toLowerCase()) &&
                 (selectedGender === '' || character.gender === selectedGender) &&
@@ -71,9 +72,19 @@ export default function Homepage() {
                 (selectedSpecies === '' || character.species === selectedSpecies)
             );
         });
-        setData(filteredData); 
-    }, [selectedGender, selectedStatus, selectedSpecies, input, originalData]);
-    
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        setData(filteredData.slice(startIndex, endIndex));
+    };
+
+    useEffect(() => {
+        if (searchResult !== 1 && searchResult.length > 0) {
+            applyFiltersAndPagination(searchResult);
+        } else {
+            applyFiltersAndPagination(originalData);
+        }
+    }, [searchResult, input, selectedGender, selectedStatus, selectedSpecies, currentPage, originalData]);
+
     const handleGenderChange = (event) => {
         setSelectedGender(event.target.value);
     };
@@ -92,29 +103,29 @@ export default function Homepage() {
         setSelectedSpecies('');
         setInput('');
         setSearchResult([]);
-        fetchData(1);
+        fetchData();
         setCurrentPage(1);
     };
 
     const handleNextPage = () => {
-        if(currentPage < totalPages) {
+        if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     };
 
     const handlePreviousPage = () => {
-        if(currentPage > 1) {
+        if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
     };
 
     return (
-        <div style={{ 
-            backgroundImage: `url(${rickAndMortyImage})`, 
-            backgroundSize: 'cover', 
-            backgroundRepeat: 'no-repeat', 
-            minHeight: '100vh', 
-            padding: '20px' 
+        <div style={{
+            backgroundImage: `url(${rickAndMortyImage})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '100vh',
+            padding: '20px'
         }}>
 
             <div>
@@ -156,7 +167,7 @@ export default function Homepage() {
                 ) : (
                     <p>No hay datos disponibles</p>
                 )}
-                <br/>
+                <br />
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous Page</button>
                 <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next Page</button>
             </div>
