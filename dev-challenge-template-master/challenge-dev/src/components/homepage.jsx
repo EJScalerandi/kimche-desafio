@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import rickAndMortyImage from "../assets/rickandmorty.jpg";
 
 export default function Homepage() {
+    const [originalData, setOriginalData] = useState([]);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -15,14 +16,13 @@ export default function Homepage() {
     const [searchResult, setSearchResult] = useState([]);
    
     useEffect(() => {
+        fetchData(currentPage);
         if (searchResult === 1) {
             return;
         }
         if (searchResult.length > 1) {
             setData(searchResult);
-        } else {
-            fetchData(currentPage);
-        }
+        } 
     }, [searchResult, currentPage]);
     
 
@@ -55,6 +55,7 @@ export default function Homepage() {
         })
         .then(response => response.json())
         .then(result => {
+            setOriginalData(result.data.characters.results); 
             setData(result.data.characters.results);
             setTotalPages(result.data.characters.info.pages);
         })
@@ -62,16 +63,7 @@ export default function Homepage() {
     };
 
     useEffect(() => {
-        if(searchResult === 1) {
-            return;
-        }
-        if(searchResult.length > 0) {
-            setData(searchResult);
-        }
-    }, [searchResult]);
-    
-    useEffect(() => {
-        const filteredData = data.filter(character => {
+        const filteredData = originalData.filter(character => { 
             return (
                 character.name.toLowerCase().includes(input.toLowerCase()) &&
                 (selectedGender === '' || character.gender === selectedGender) &&
@@ -79,8 +71,8 @@ export default function Homepage() {
                 (selectedSpecies === '' || character.species === selectedSpecies)
             );
         });
-        setData(filteredData);
-    }, [selectedGender, selectedStatus, selectedSpecies]);
+        setData(filteredData); 
+    }, [selectedGender, selectedStatus, selectedSpecies, input, originalData]);
     
     const handleGenderChange = (event) => {
         setSelectedGender(event.target.value);
@@ -98,6 +90,7 @@ export default function Homepage() {
         setSelectedGender('');
         setSelectedStatus('');
         setSelectedSpecies('');
+        setInput('');
         setSearchResult([]);
         fetchData(1);
         setCurrentPage(1);
@@ -116,10 +109,16 @@ export default function Homepage() {
     };
 
     return (
-        <div style={{ backgroundImage: `url(${rickAndMortyImage})`, backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', minHeight: '100vh', padding: '20px' }}>
+        <div style={{ 
+            backgroundImage: `url(${rickAndMortyImage})`, 
+            backgroundSize: 'cover', 
+            backgroundRepeat: 'no-repeat', 
+            minHeight: '100vh', 
+            padding: '20px' 
+        }}>
 
             <div>
-                <SearchBar setSearchResult={setSearchResult} />
+                <SearchBar setSearchResult={setSearchResult} setInput={setInput} />
             </div>
             <select value={selectedGender} onChange={handleGenderChange}>
                 <option value="">All Genders</option>

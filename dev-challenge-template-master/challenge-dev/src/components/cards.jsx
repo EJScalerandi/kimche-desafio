@@ -1,6 +1,5 @@
 import React from "react";
-import "./cards.css"; // Importa el archivo de estilos CSS
-
+import "./cards.css"; 
 export default function Cards({ name, image }) {
     return (
         <div className="card">

@@ -1,10 +1,15 @@
 .card {
-    border: 1px solid #ec0b0b;
-    border-radius: 8px;
+    border: 1px solid #ff0505;
+    border-radius: 12px;
     padding: 16px;
     margin: 8px;
-    width: 200px; /* Ancho deseado */
+    width: 200px; 
     display: inline-block;
+    transition: transform 0.5s; 
+}
+
+.card:hover {
+    transform: scale(1.1); 
 }
 
 .card-name {
