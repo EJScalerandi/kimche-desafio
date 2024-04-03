@@ -14,7 +14,7 @@ export default function Homepage() {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [selectedSpecies, setSelectedSpecies] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    const pageSize = 32; 
+    const pageSize = 24; 
     useEffect(() => {
         fetchData();
     }, []);
