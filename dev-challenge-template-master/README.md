@@ -1,7 +1,7 @@
 # Desafío para Dev
 
 Nombre postulante: Esteban Javier Scalerandi
-Link a la app en producción: [LINK DEL DEPLOY]
+Link a la app en producción: [\[LINK DEL DEPLOY\]](https://kimche-desafio-c8ao.vercel.app/)
 
 ## Instrucciones
 
