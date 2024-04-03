@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Cards from "./Cards";
+import Cards from "./cards";
 import SearchBar from "./searchbar";
 import { Link } from "react-router-dom";
 import rickAndMortyImage from "../assets/rickandmorty.jpg";
@@ -134,20 +134,20 @@ export default function Homepage() {
                 <SearchBar setSearchResult={setSearchResult} setInput={setInput} />
             </div>
             <div style={{ display: 'flex', marginBottom: '20px' }}> 
-                <select value={selectedGender} onChange={handleGenderChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                <select value={selectedGender} onChange={handleGenderChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> 
                     <option value="">Todos los géneros</option>
                     <option value="Male">Masculinos</option>
                     <option value="Female">Femeninos</option>
                     <option value="Genderless">Sin género</option>
                     <option value="unknown">Desconocido</option>
                 </select>
-                <select value={selectedStatus} onChange={handleStatusChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em' ,textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                <select value={selectedStatus} onChange={handleStatusChange} style={{ flex: '1', marginRight: '10px', height: '40px', fontSize: '1.1em' ,textAlign: 'center', borderRadius: '5px' }}> 
                     <option value="">Todos los estados</option>
                     <option value="Alive">Con vida</option>
                     <option value="Dead">Muertos</option>
                     <option value="unknown">Desconocido</option>
                 </select>
-                <select value={selectedSpecies} onChange={handleSpeciesChange} style={{ flex: '1', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> {/* Estilo flex para distribuir el espacio */}
+                <select value={selectedSpecies} onChange={handleSpeciesChange} style={{ flex: '1', height: '40px', fontSize: '1.1em', textAlign: 'center', borderRadius: '5px' }}> 
                     <option value="">Todas las especies</option>
                     <option value="Human">Humanos</option>
                     <option value="Alien">Alien</option>
